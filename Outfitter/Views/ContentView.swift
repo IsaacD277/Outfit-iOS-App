@@ -24,7 +24,7 @@ struct ContentView: View {
             }
             
             Tab("Add", systemImage: "plus", value: 1) {
-                NewSelectImageView()
+                SelectImageView()
             }
             
             Tab("Settings", systemImage: "gear", value: 2) {

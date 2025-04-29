@@ -12,7 +12,7 @@ import SwiftUI
 class Outfit: Identifiable, Hashable {
     var id = UUID()
     @Attribute(.externalStorage) var imageData: Data?
-    var tags: [Tag]
+    @Relationship var tags: [Tag]
     var dateAdded: Date
     @Relationship(deleteRule: .cascade) var datesWorn: [WornDate] = []
     var favorite: Bool
@@ -42,15 +42,5 @@ extension Outfit {
 extension Outfit {
     static var dummy: Outfit {
         .init(image: UIImage(imageLiteralResourceName: "image2"), tags: [Tag("Test"), Tag("Work")])
-    }
-}
-
-extension Outfit {
-    static func == (lhs: Outfit, rhs: Outfit) -> Bool {
-        lhs.id == rhs.id
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
     }
 }

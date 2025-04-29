@@ -114,5 +114,5 @@ struct ChatView: View {
 }
 
 #Preview {
-    ChatView(outfit: Outfit(image: UIImage(), tags: [Tag("Work")]))
+    ChatView(outfit: Outfit(image: UIImage(imageLiteralResourceName: "image2"), tags: [Tag("Work")]))
 }

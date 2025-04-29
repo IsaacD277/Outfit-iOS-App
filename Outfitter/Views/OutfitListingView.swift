@@ -17,6 +17,7 @@ struct OutfitListingView: View {
             ForEach(outfits) { outfit in
                 NavigationLink(value: outfit) {
                     OutfitCard(outfit)
+                        .padding()
                 }
             }
         }

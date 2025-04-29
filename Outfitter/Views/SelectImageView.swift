@@ -2,69 +2,29 @@
 //  SelectImageView.swift
 //  Outfitter
 //
-//  Created by Isaac D2 on 3/10/25.
+//  Created by Isaac D2 on 4/24/25.
 //
 
 import PhotosUI
+import SwiftData
 import SwiftUI
 
 struct SelectImageView: View {
-    @State private var selectedPhoto: PhotosPickerItem? = nil
-    @State private var selectedImage: UIImage? = nil
-    @State private var path = [UIImage]()
+    @Environment(\.modelContext) var modelContext
+    @State private var selectedItem: PhotosPickerItem?
+    @State private var selectedImage: UIImage?
     
     var body: some View {
-        NavigationStack(path: $path) {
-            VStack(spacing: 20) {
-                Text("Select an outfit photo")
-                
-                PhotosPicker(
-                    selection: $selectedPhoto,
-                    matching: .images,
-                    preferredItemEncoding: .current,
-                    photoLibrary: .shared()
-                ) {
-                    Label("Select Photo", systemImage: "photo.on.rectangle")
-                        .font(.system(size: 18, weight: .semibold))
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.blue.gradient)
-                        .foregroundStyle(.white)
-                        .clipShape(.rect(cornerRadius: 12))
+        PhotosPicker(selection: $selectedItem, matching: .images) {
+            VStack(alignment: .leading, spacing: 0) {
+                GeometryReader { geometry in
+                    Image("image2")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: geometry.size.width, height: geometry.size.width)
                 }
-                .photosPickerStyle(.inline)
-                .photosPickerAccessoryVisibility(.visible)
-                .onChange(of: selectedPhoto) { _, newPhoto in
-                    Task {
-                        await loadImage(from: newPhoto)
-                    }
-                }
+                .aspectRatio(1.0, contentMode: .fit) // Maintain square aspect ratio
             }
-            .padding()
-            .navigationTitle("Import Outfits")
-            .navigationDestination(for: UIImage.self) { image in
-                // AddOutfitView(image: image)
-            }
-        }
-        .onChange(of: path) { oldValue, newValue in
-            if newValue.isEmpty {
-                selectedPhoto = nil
-                selectedImage = nil
-            }
-        }
-    }
-    
-    private func loadImage(from item: PhotosPickerItem?) async {
-        guard let item else { return }
-        
-        do {
-            if let data = try await item.loadTransferable(type: Data.self),
-               let uiImage = UIImage(data: data) {
-                selectedImage = uiImage
-                path.append(uiImage)
-            }
-        } catch {
-            print("Unable to load image. Error: \(error.localizedDescription)")
         }
     }
 }
