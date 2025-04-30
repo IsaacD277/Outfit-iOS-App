@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct TagView: View {
-    var content: String
+    var tag: Tag
     
-    init(_ content: String) {
-        self.content = content
+    init(_ tag: Tag) {
+        self.tag = tag
     }
     
     var body: some View {
@@ -20,7 +20,7 @@ struct TagView: View {
                 .foregroundStyle(.white)
                 .padding(.vertical, 6)
                 .padding(.leading, 8)
-            Text(content)
+            Text(tag.name)
                 .padding(.trailing, 8) // Add padding around the text
                 .foregroundColor(.white) // Set the text color to white
         }
@@ -32,6 +32,6 @@ struct TagView: View {
 }
 
 #Preview {
-    TagView("Work")
+    TagView(Tag("Work"))
 }
 

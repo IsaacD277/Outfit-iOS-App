@@ -19,7 +19,7 @@ struct FilterBar: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
                 ForEach(filter) { tag in
-                    TagView(tag.name)
+                    TagView(tag)
                 }
             }
             .padding(.trailing, 16)

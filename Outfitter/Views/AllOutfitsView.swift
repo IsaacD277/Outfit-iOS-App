@@ -28,13 +28,7 @@ struct AllOutfitsView: View {
                 .toolbar {
                     PhotosPicker(selection: $selectedItem, matching: .images) {
                         VStack(alignment: .leading, spacing: 0) {
-                            GeometryReader { geometry in
-                                Image("image2")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: geometry.size.width, height: geometry.size.width)
-                            }
-                            .aspectRatio(1.0, contentMode: .fit) // Maintain square aspect ratio
+                            Image(systemName: "plus")
                         }
                     }
                     .onChange(of: selectedItem) {

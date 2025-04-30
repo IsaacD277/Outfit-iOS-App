@@ -45,7 +45,7 @@ struct EditOutfitView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
                     ForEach(outfit.tags) { tag in
-                        TagView(tag.name)
+                        TagView(tag)
                             .onTapGesture {
                                 deleteTag(tag)
                             }
@@ -91,20 +91,18 @@ struct EditOutfitView: View {
             }
         }
         .padding()
-        .navigationTitle("Add Tags")
+        .navigationTitle("Edit Outfit")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            Button("Done") {
-                addTag()
-                #warning("Undo focus from the text field")
-                #warning("Change \"Done\" to \"Edit\"")
+            Button(tagBarFocus ? "Done" : "Edit") {
+                tagBarFocus = tagBarFocus ? false : true
             }
         }
     }
     
     func addTag() {
         // Step 1: Normalize input
-        let trimmedName = draftTag.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        let trimmedName = draftTag.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedName.isEmpty else { return }
         
         // Step 2: Check for existing tag

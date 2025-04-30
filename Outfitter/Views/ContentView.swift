@@ -23,16 +23,8 @@ struct ContentView: View {
                 AllOutfitsView()
             }
             
-            Tab("Add", systemImage: "plus", value: 1) {
-                SelectImageView()
-            }
-            
-            Tab("Settings", systemImage: "gear", value: 2) {
-                // Add settings somehow
-                
-                //MARK: TEMPORARY
-                // AddOutfitView(image: UIImage(imageLiteralResourceName: "image2"))
-//                EditOutfitView(Outfit(image: UIImage(imageLiteralResourceName: "image2"), tags: [Tag("Test"), Tag("Work"), Tag("Play"), Tag("Suit"), Tag("Testing"), Tag("What"), Tag("Is"), Tag("Happening")]))
+            Tab("Settings", systemImage: "gear", value: 1) {
+                SettingsView()
             }
         }
     }
