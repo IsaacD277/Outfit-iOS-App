@@ -18,7 +18,7 @@ struct SettingsView: View {
             Text("")
             Text("Go visit isaacd2.com in the meantime.")
             Text("Subscribe to my newsletter.")
-            Text("Thanks! ❤️")
+            Text("Thanks! ✌️")
             Spacer()
             Text("Version 0.1.0")
                 .font(.caption)
