@@ -11,9 +11,11 @@ import SwiftUI
 @Model
 class Tag: Identifiable, Hashable {
     @Attribute(.unique) var name: String
+    var symbol: String?
     
-    init(_ name: String) {
+    init(_ name: String, _ symbol: String = "tag.circle") {
         self.name = name
+        self.symbol = symbol
     }
     
     var normalizedName: String {

@@ -14,6 +14,7 @@ struct EditOutfitView: View {
     
     @Bindable var outfit: Outfit
     @State private var draftTag: String = ""
+    @State private var editing: Bool = false
     
     @FocusState private var tagBarFocus
     
@@ -39,16 +40,28 @@ struct EditOutfitView: View {
                     }
                     .clipShape(.rect(cornerRadius: 12))
                     .shadow(radius: 4)
+                    .transaction { transaction in
+                        transaction.animation = nil // Prevents image from being animated
+                    }
+                    
+                    Button(editing ? "Done" : "Edit") {
+                        tagBarFocus = tagBarFocus ? false : true
+                        editing = !editing
+                    }
                 }
             }
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
                     ForEach(outfit.tags) { tag in
-                        TagView(tag)
+                        TagView(tag, editing ? "xmark.circle" : tag.symbol)
+                            .contentTransition(.symbolEffect(.replace))
                             .onTapGesture {
-                                deleteTag(tag)
+                                if editing {
+                                    deleteTag(tag)
+                                }
                             }
+                            .transition(.scale)
                     }
                 }
                 .padding(.trailing, 16)
@@ -78,6 +91,7 @@ struct EditOutfitView: View {
                                 addTag()
                             } label: {
                                 Image(systemName: "tag.fill")
+                                    .foregroundStyle(draftTag.isEmpty ? .gray : Color.d2Orange)
                             }
                             .disabled(draftTag.isEmpty)
                         }
@@ -94,8 +108,9 @@ struct EditOutfitView: View {
         .navigationTitle("Edit Outfit")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            Button(tagBarFocus ? "Done" : "Edit") {
+            Button(editing ? "Done" : "Edit") {
                 tagBarFocus = tagBarFocus ? false : true
+                editing = !editing
             }
         }
     }
@@ -109,22 +124,24 @@ struct EditOutfitView: View {
         if let existingTag = tags.first(where: { $0.normalizedName == trimmedName }) {
             // Step 3: If it exists, add the existing tag
             if outfit.tags.contains(existingTag) == false {
-                outfit.tags.append(existingTag)
+                outfit.tags.insert(existingTag, at: 0)
             }
         } else {
             // Step 4: If it doesn't exist, create a new tag
             let newTag = Tag(trimmedName)
             modelContext.insert(newTag) // <- important, make sure SwiftData knows about it
-            outfit.tags.append(newTag)
+            outfit.tags.insert(newTag, at: 0)
         }
         
         // Step 5: Clear the text field
         draftTag = ""
     }
-        
+    
     func deleteTag(_ tag: Tag) {
-        if let index = outfit.tags.firstIndex(of: tag) {
-            outfit.tags.remove(at: index)
+        withAnimation {
+            if let index = outfit.tags.firstIndex(of: tag) {
+                outfit.tags.remove(at: index)
+            }
         }
     }
 }
@@ -132,4 +149,16 @@ struct EditOutfitView: View {
 
 #Preview {
     EditOutfitView(outfit: Outfit(image: UIImage(imageLiteralResourceName: "image2"), tags: [Tag("Test"), Tag("Work"), Tag("Play"), Tag("Suit"), Tag("Testing"), Tag("What"), Tag("Is"), Tag("Happening")]))
+}
+
+#Preview("Dummy Data") {
+    do {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try ModelContainer(for: Outfit.self, configurations: config)
+        let example = Outfit(image: UIImage(imageLiteralResourceName: "image2"), tags: [Tag("Work"), Tag("Formal")], favorite: false)
+        return EditOutfitView(outfit: example)
+            .modelContainer(container)
+    } catch {
+        fatalError("Failed to create model container.")
+    }
 }

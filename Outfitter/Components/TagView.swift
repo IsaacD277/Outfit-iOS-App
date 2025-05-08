@@ -9,29 +9,31 @@ import SwiftUI
 
 struct TagView: View {
     var tag: Tag
+    var symbol: String
     
-    init(_ tag: Tag) {
+    init(_ tag: Tag, _ symbol: String? = nil) {
         self.tag = tag
+        self.symbol = symbol ?? tag.symbol ?? "tag.circle"
     }
     
     var body: some View {
-        HStack {
-            Image(systemName: "tag")
-                .foregroundStyle(.white)
-                .padding(.vertical, 6)
-                .padding(.leading, 8)
+        Label {
             Text(tag.name)
-                .padding(.trailing, 8) // Add padding around the text
-                .foregroundColor(.white) // Set the text color to white
+                .font(.headline)
+                .foregroundStyle(.white)
+        } icon: {
+            Image(systemName: symbol)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 20, height: 20) // Set consistent size
+                .foregroundStyle(.white)
         }
-        .background(
-            RoundedRectangle(cornerRadius: 12.0)
-                .fill(Color.blue) // Create a blue capsule background
-        )
+        .symbolRenderingMode(.hierarchical)
+        .padding(10)
+        .background(Color.d2Orange, in: Capsule())
     }
 }
 
 #Preview {
-    TagView(Tag("Work"))
+    TagView(Tag("Work"), "folder")
 }
-
